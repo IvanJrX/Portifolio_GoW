@@ -1,20 +1,17 @@
 document.addEventListener('DOMContentLoaded', function() {
     const updateCarousel = () => {
-        // Seleciona os containers dos carrosséis
         const containerPadrao = document.querySelector('.container_carrossel');
         const containerResponsivo = document.querySelector('.container_responsivo');
 
-        // Determina qual conjunto de elementos usar com base na visibilidade
         let botoes, imagens;
         if (window.getComputedStyle(containerPadrao).display !== 'none') {
             botoes = document.querySelectorAll('.botoes_carrossel .botao');
             imagens = document.querySelectorAll('.container_carrossel .imagem');
         } else {
-            botoes = document.querySelectorAll('.botoes_responsivo .botao');
+            botoes = document.querySelectorAll('.botoes_carrossel .botao');
             imagens = document.querySelectorAll('.container_responsivo .container_imagem');
         }
 
-        // Atualiza os manipuladores de evento para o conjunto correto de botões
         botoes.forEach((botao, indice) => {
             botao.addEventListener('click', () => {
                 const imagemAtual = document.querySelector('.ativa');
@@ -23,13 +20,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (imagemAtual) imagemAtual.classList.remove('ativa');
                 if (botaoAtual) botaoAtual.classList.remove('selecionado');
 
-                imagens[indice].classList.add('ativa');
-                botoes[indice].classList.add('selecionado');
+                if (indice < imagens.length) { // Garante que não haja erro de índice
+                    imagens[indice].classList.add('ativa');
+                    botoes[indice].classList.add('selecionado');
+                }
             });
         });
+
+        // Garante que uma imagem seja ativa por padrão
+        if (!document.querySelector('.ativa')) {
+            if (imagens.length > 0 && botoes.length > 0) {
+                imagens[0].classList.add('ativa');
+                botoes[0].classList.add('selecionado');
+            }
+        }
     };
 
-    // Atualiza o carrossel na inicialização e em cada redimensionamento
     updateCarousel();
     window.addEventListener('resize', updateCarousel);
 });
